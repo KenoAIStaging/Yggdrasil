@@ -2,7 +2,7 @@
 # `julia build_tarballs.jl --help` to see a usage message.
 using BinaryBuilder, BinaryBuilderBase
 
-name = "TreeSitter"
+name = "tree_sitter_cli"
 version = v"0.25.6"
 
 # Collection of sources required to complete build
