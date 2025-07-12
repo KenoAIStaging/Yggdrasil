@@ -15,10 +15,13 @@ sources = [
 # Bash recipe for building across all platforms
 script = raw"""
 cd $WORKSPACE/srcdir/tree-sitter
-cd crates/cli
+# The CLI is now in the cli subdirectory
+cd cli
+# Set environment variables to fix endianness function issues
+export CFLAGS="${CFLAGS} -D_GNU_SOURCE"
 cargo build --locked --release
-install -Dvm 755 "../../target/${rust_target}/release/tree-sitter${exeext}" -t "${bindir}"
-cd ../..
+install -Dvm 755 "../target/${rust_target}/release/tree-sitter${exeext}" -t "${bindir}"
+cd ..
 install_license LICENSE
 """
 
