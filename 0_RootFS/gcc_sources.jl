@@ -292,17 +292,14 @@ function gcc_sources(gcc_version::VersionNumber, compiler_target::Platform; kwar
             error("Unknown arch for glibc for compiler target $(compiler_target)")
         end
     elseif Sys.islinux(compiler_target) && libc(compiler_target) == "musl"
-        if arch(compiler_target) in ["riscv64"]
-            libc_sources = [
-                ArchiveSource("https://www.musl-libc.org/releases/musl-1.2.0.tar.gz",
-                              "c6de7b191139142d3f9a7b5b702c9cae1b5ee6e7f57e582da9328629408fd4e8"),
-            ]
-        else
-            libc_sources = [
-                ArchiveSource("https://www.musl-libc.org/releases/musl-1.1.19.tar.gz",
-                              "db59a8578226b98373f5b27e61f0dd29ad2456f4aa9cec587ba8c24508e4c1d9"),
-            ]
-        end
+        # musl 1.2.3 is the minimum version assumed by Rust >= 1.84, which
+        # emits hard references to `getrandom` (musl 1.1.20) and
+        # `posix_spawn_file_actions_addchdir_np` (musl 1.1.24).
+        # See https://github.com/rust-lang/rust/issues/141795
+        libc_sources = [
+            ArchiveSource("https://www.musl-libc.org/releases/musl-1.2.3.tar.gz",
+                          "7d5b0b6062521e4627e099e4c9dc8248d32a30285e959b7eecaa780cf8cfd4a4"),
+        ]
     elseif Sys.isapple(compiler_target)
         if arch(compiler_target) == "aarch64"
             libc_sources = [
